@@ -1,0 +1,111 @@
+extends manager_layout
+block content
+  nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+    div.navbar-header
+      a.navbar-brand Kickerturnier
+    div.collapse.navbar-collapse
+      ul.nav.navbar-nav
+        li
+          a(href='javascript:void(0)' onclick='send_playData();return false;') SaveData
+        li.dropdown
+          a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde +
+          ul.dropdown-menu.roundCtrl(data-todo='add')
+            li.divider
+
+        li.dropdown
+          a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde -
+          ul.dropdown-menu.roundCtrl(data-todo='remove')
+            li.divider
+
+  div#accordion.panel-group
+    div.panel.panel-default
+      div.panel-heading(data-toggle="collapse", data-parent="#accordion",data-target='#collapseOne')
+        h2.panel-title Vorbereitung
+      div#collapseOne.panel-collapse.collapse.in
+        div.panel-body
+          label(for='groupsCnt2') Gruppenanzahl:
+          div.btn-group#groupsCnt2
+            button#addGroup.btn.btn-default(type='submit', onclick="addGroupBtn_pressed()")
+              span.glyphicon.glyphicon-plus
+            button#remGroup.btn.btn-default(type='submit', onclick="remGroupBtn_pressed()")
+              span.glyphicon.glyphicon-minus
+          div#sec1_header
+            div#sec1_body.row
+            button#createPlay.btn(type='submit',onclick="createPlaylistBtn_pressed()") Spielplan erstellen
+    div.panel.panel-default
+      div.panel-heading(data-toggle="collapse", data-parent="#accordion",data-target='#collapseTwo')
+        h2.panel-title Spielpläne
+      div#collapseTwo.panel-collapse.collapse
+        div.panel-body
+          div#sec2.row
+
+  div(data-ng-controller='listcntrl')
+    table(data-ng-repeat='(key,value) in play')
+      tr(data-ng-repeat ='pla in value')
+        td
+          span {{pla.punkte}}
+        td
+          select(ng-model='pla.punkte',ng-options='sel for sel in selects')
+
+  div#remGroupAlert
+    div.alert.alert-danger.fade.in
+      h4 Warnung!
+      p Dies Löscht möglicherweise wichtige Daten!! 
+      button.btn.btn-danger(type="button", onclick="remGroupAlert_OKBtn_pressed()") Trotzdem ausführen
+      button.btn.btn-default(type="button", onclick="remGroupAlert_NOBtn_pressed()") Abbrechen
+
+  div#connectAlert
+    div#connect2Alert
+      p  Verbinde zum Server!
+      p   und lade Daten.
+      div.progress.progress-striped.active(style='width: 50%')
+        div.progress-bar(role="progressbar", style="width: 100%")
+  
+  
+  div#dummyRound
+    li
+      a(href='javascript:void(0)' onclick='triggerRound(event);return false;' data-isgroup='0' data-todo='add') Gruppe
+    li.divider
+
+  table.table.table-striped.table-condensed.table-striped#dummyTable
+    tr
+      td.point_select_td
+        div.point_select_div
+          span.point_select_span.btn.btn-default 0
+          select.form-control.selector(onchange="selector_change(event)") 
+            option 0
+            option 1
+            option 2
+            option 3
+            option 4
+            option 5
+            option 6
+            option 7
+            option 8
+            option 9
+            option 10 
+      td.leftEnemy
+      td :
+      td.rightEnemy
+      td.point_select_td
+        div.point_select_div
+          span.point_select_span.btn.btn-default 0
+          select.form-control.selector(onchange="selector_change(event)") 
+            option 0
+            option 1
+            option 2
+            option 3
+            option 4
+            option 5
+            option 6
+            option 7
+            option 8
+            option 9
+            option 10 
+
+  script(src="/javascripts/jquery.min.js")
+  script(src="/socket.io/socket.io.js")
+  script(src="/javascripts/collapse.js")
+  script(src="/javascripts/alert.js")
+  script(src="/javascripts/dropdown.js")
+  script(src="/javascripts/manager.js")
