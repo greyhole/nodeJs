@@ -1,4 +1,4 @@
-var socket = io.connect('http://nvettersmall:3000');
+var socket = io.connect('http://nvetter:3000');
 
     
 socket.on('connecting',function(){
@@ -38,7 +38,7 @@ function selector_change(event){
     $(event.target).parent().children('span').text(selected);
 }
 
-function teamInput_change(event){
+/*function teamInput_change(event){
     var element = event.target;
     if ($(element).is(':last-child')) {
         $(element).parent().append("<input class='form-control' type='text' placeholder='Teamname' onchange='teamInput_change(event)'></input>");
@@ -50,7 +50,7 @@ function teamInput_change(event){
         };
     }
 }
-
+*/
 jQuery.extend(jQuery.expr[':'],{
     notempty: function(tmp){
         return (tmp.value.length > 0);
@@ -154,12 +154,22 @@ kickApp.controller('listcntrl',function($scope,Db){
     ]};
 });
 
+kickApp.controller('groupctrl',function($scope,Db){
+    $scope.group = Db.groups;
+
+    $scope.onchange = function(key,index){
+        alert(key);
+        alert(index);
+        alert($scope.group[key].teams[index]);
+    };
+});
+
 kickApp.factory('Db', function() {
   return {
     selects : [0,1,2,3,4,5,6,7,8,9,10],
 
     playlist : {},
-    groups : {'Gruppe A' : {'teams':[],
+    groups : {'Gruppe A' : {'teams':[""],
                             'runde':0,
                             }},
     };

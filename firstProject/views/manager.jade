@@ -30,7 +30,10 @@ block content
             button#remGroup.btn.btn-default(type='submit', onclick="remGroupBtn_pressed()")
               span.glyphicon.glyphicon-minus
           div#sec1_header
-            div#sec1_body.row
+            div#sec1_body.row(data-ng-controller='groupctrl')
+              div.col-xs-12.sec_div.col-md-3(data-ng-repeat='(key,value) in group') {{key}}
+                input.form-control(type='text' placeholder='Teamname' data-ng-model='team' data-ng-repeat='team in value.teams' data-ng-change='onchange(key,$index)')
+
             button#createPlay.btn(type='submit',onclick="createPlaylistBtn_pressed()") Spielplan erstellen
     div.panel.panel-default
       div.panel-heading(data-toggle="collapse", data-parent="#accordion",data-target='#collapseTwo')
