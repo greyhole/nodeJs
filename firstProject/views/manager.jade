@@ -7,32 +7,36 @@ block content
       ul.nav.navbar-nav
         li
           a(href='javascript:void(0)' onclick='send_playData();return false;') SaveData
-        li.dropdown
+        li.dropdown(ng-controller='groupctrl')
           a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde +
-          ul.dropdown-menu.roundCtrl(data-todo='add')
-            li.divider
+          ul.dropdown-menu
+            li(ng-repeat='(key,value) in db.group')
+              a(href='javascript:void(0)' ng-click='value.runde = value.runde + 1') {{key}} Runde: {{value.runde}}
 
-        li.dropdown
+        li.dropdown(ng-controller='groupctrl')
           a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde -
-          ul.dropdown-menu.roundCtrl(data-todo='remove')
-            li.divider
+          ul.dropdown-menu
+            li(ng-repeat='(key,value) in db.group')
+              a(href='javascript:void(0)' ng-click='value.runde = (value.runde == 0) ? 0 : value.runde-1') {{key}} Runde: {{value.runde}}
 
   div#accordion.panel-group
     div.panel.panel-default
       div.panel-heading(data-toggle="collapse", data-parent="#accordion",data-target='#collapseOne')
         h2.panel-title Vorbereitung
       div#collapseOne.panel-collapse.collapse.in
-        div.panel-body
+        div.panel-body(ng-controller='groupctrl')
           label(for='groupsCnt2') Gruppenanzahl:
+          
           div.btn-group#groupsCnt2
-            button#addGroup.btn.btn-default(type='submit', onclick="addGroupBtn_pressed()")
+            button#addGroup.btn.btn-default(type='submit', ng-click="addGroupBtn_pressed()")
               span.glyphicon.glyphicon-plus
-            button#remGroup.btn.btn-default(type='submit', onclick="remGroupBtn_pressed()")
+            button#remGroup.btn.btn-default(type='submit', ng-click="remGroupBtn_pressed()")
               span.glyphicon.glyphicon-minus
+          
           div#sec1_header
-            div#sec1_body.row(data-ng-controller='groupctrl')
-              div.col-xs-12.sec_div.col-md-3(data-ng-repeat='(key,value) in group') {{key}}
-                input.form-control(type='text' placeholder='Teamname' data-ng-model='team' data-ng-repeat='team in value.teams' data-ng-change='onchange(key,$index)')
+            div#sec1_body.row
+              div.col-xs-12.sec_div.col-md-3(data-ng-repeat='(key,value) in db.group') {{key}}
+                  input.form-control(type='text', placeholder='Teamname', ng-repeat='team in value.teams', ng-model='team.name', ng-blur='onblur(key,$index)', ng-change='onchange(key,$index)')
 
             button#createPlay.btn(type='submit',onclick="createPlaylistBtn_pressed()") Spielplan erstellen
     div.panel.panel-default
@@ -50,12 +54,12 @@ block content
         td
           select(ng-model='pla.punkte',ng-options='sel for sel in selects')
 
-  div#remGroupAlert
+  div#remGroupAlert(ng-controller='groupctrl', ng-show='db.showAlert')
     div.alert.alert-danger.fade.in
       h4 Warnung!
       p Dies Löscht möglicherweise wichtige Daten!! 
       button.btn.btn-danger(type="button", onclick="remGroupAlert_OKBtn_pressed()") Trotzdem ausführen
-      button.btn.btn-default(type="button", onclick="remGroupAlert_NOBtn_pressed()") Abbrechen
+      button.btn.btn-default(type="button", ng-click="db.showAlert=false") Abbrechen
 
   div#connectAlert
     div#connect2Alert
@@ -65,11 +69,7 @@ block content
         div.progress-bar(role="progressbar", style="width: 100%")
   
   
-  div#dummyRound
-    li
-      a(href='javascript:void(0)' onclick='triggerRound(event);return false;' data-isgroup='0' data-todo='add') Gruppe
-    li.divider
-
+    
   table.table.table-striped.table-condensed.table-striped#dummyTable
     tr
       td.point_select_td

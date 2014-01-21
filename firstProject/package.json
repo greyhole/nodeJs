@@ -11,6 +11,6 @@
 	"jquery": "*",
 	"socket.io": "*",
 	"bootstrap": "*",
-	"angular": "*",
+	"angular": "*"
   }
 }
