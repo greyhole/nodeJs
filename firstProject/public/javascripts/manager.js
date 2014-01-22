@@ -1,15 +1,3 @@
-var socket = io.connect('http://nvettersmall:3000');
-
-    
-socket.on('connecting',function(){
-    console.log('client connecting');
-    $('#connectAlert').show();
-});
-
-socket.on('connect',function(){
-   $('#connectAlert').hide(); 
-    console.log('client has connected');
-});
 
 function send_playData(){
     socket.emit('saveData',{data: playlist},function(data){
@@ -99,6 +87,35 @@ var model = angular.module('kickApp.model', [])
             showAlert: false,
         };
     })
+
+    .factory('ws',function($rootScope){
+        var socket = io.connect();
+        return {
+            on: function(eventName, callback){
+                socket.on(eventName,function(){
+                    var args = arguments;
+                    $rootScope.$apply(function(){
+                        callback.apply(socket,args);
+                    });
+                });
+            },
+
+            emit: function(eventName, data, callback){
+                if (typeof data == 'function') {
+                    callback = data;
+                    data={};
+                };
+                socket.emit(eventName,data,function(){
+                    var args = arguments;
+                    $rootScope.$apply(function(){
+                        if (callback) {
+                            callback.apply(socket,args);
+                        }     
+                    });
+                });
+            }
+        };
+    })
 ;
 
 /* alles an logik liegt in controller und directives
@@ -141,6 +158,14 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
             {'name4':'team4', 'punkte':'0'},
             {'name5':'team5', 'punkte':'0'},
         ]};
+    })
+    .controller('socketctrl',function($scope,ws,Db){
+        $scope.connected = false;
+        $scope.db = Db;
+
+        $scope.sendGroup = function(){
+            ws.emit()
+        };
     })
 ;
 
