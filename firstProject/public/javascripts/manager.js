@@ -129,9 +129,22 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
         };
 
         $scope.sendGroup = function(){
-            ws.emit('testdata',{'data': $scope.db.group},function(data){
-                console.log(data);
-            });
+            var tmpgroup = angular.copy(Db.group);
+            for (var ii in tmpgroup) {
+                if (tmpgroup[ii].teams.length > 3){
+                    tmpgroup[ii].teams.pop();
+                } 
+                else{
+                  delete tmpgroup[ii]; 
+                }
+            };
+            
+            if (Object.keys(tmpgroup).length != 0){
+                ws.emit('calculate_playlist',{'data': tmpgroup},function(data){
+                  $scope.db.playlist = data;
+                console.log(Db.playlist);
+                });
+            }
         };
 
         $scope.remGroupBtn_pressed = function(){
@@ -142,7 +155,6 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
         $scope.onchange = function(key,index){
             if (index==($scope.db.group[key].teams.length-1)){
                 $scope.db.group[key].teams.push({'name':''});   
-                console.log($scope.db.group);
             }
         };
         $scope.onblur = function(key,index){
@@ -151,15 +163,13 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
             }            
         };
     })
-    .controller('listcntrl',function($scope,Db){
+    .controller('listctrl',function($scope,Db){
         $scope.selects = Db.selects;
-        $scope.play = {'Gruppe A':[
-            {'name1':'team1', 'punkte':'0'},
-            {'name2':'team2', 'punkte':'0'},
-            {'name3':'team3', 'punkte':'0'},
-            {'name4':'team4', 'punkte':'0'},
-            {'name5':'team5', 'punkte':'0'},
-        ]};
+        $scope.playlist = Db.playlist;
+        $scope.$watch('playlist',function(){
+            $scope.playlist = Db.playlist;   
+        });
+
     })
     .controller('socketctrl',function($scope,ws,Db){
         $scope.db = Db;
@@ -171,5 +181,3 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
  *
  */
 var kickApp = angular.module('kickApp',['kickApp.model', 'kickApp.ctrl']);
-
-

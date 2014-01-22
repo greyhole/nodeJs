@@ -31,15 +31,10 @@ app.get('/view',function(req,res){res.render('view',{title: 'Ansicht'})});
 io.sockets.on('connection', function(socket){
     io.sockets.emit('this',{will: 'be reci'});
 
-    socket.on('beginCalc',function(dataD,dataU){
-         group =  dataD.data;
-
-        var erg = planen(groupArray);
+    socket.on('calculate_playlist',function(dataD,dataU){
+        var erg = planen(dataD.data);
+        console.log(erg);
         dataU(erg);
-    });
-    socket.on('testdata',function(dataD,dataU){
-        dataU(dataD.data);
-        console.log(dataD.data);
     });
     
     socket.on('saveData',function(dataD,dataU){
@@ -50,26 +45,41 @@ io.sockets.on('connection', function(socket){
 
 function planen(table){
     
-    var tmpT = [];
+    var tmpT = {};
 
-    for (var i = 0; i < table.length; i++){
-        var tl = table[i].length;
-        var tmpTable=[[],[],[],[]];
+    for (var ii in table){
+        var tl = table[ii].teams.length;
+        console.log('tl: ',tl);
+        var tmpObject=[];
         if ( (tl % 2) == 0){
             var z = 0;
             for (var j = 0; j < (tl-1); j++){
-                tmpTable[0].push(0);
+                tmpObject.push({
+                    'name1': table[ii].teams[(tl-1)].name,
+                    'name2': table[ii].teams[j].name,
+                    'punkte1': 0,
+                    'punkte2': 0
+                });
+                /*tmpTable[0].push(0);
                 tmpTable[1].push(table[i][(tl-1)]);
                 tmpTable[2].push(table[i][j]);
-                tmpTable[3].push(0);
+                tmpTable[3].push(0);*/
                 z = z + 1;
                 for (var k = 1; k < (tl / 2); k++) {
                     var e1 = (j + k) % (tl - 1);
                     var e2 = (j - k + tl - 1) % (tl - 1);
+                    tmpObject.push({
+                        'name1': table[ii].teams[e1].name,
+                        'name2': table[ii].teams[e2].name,
+                        'punkte1': 0,
+                        'punkte2': 0
+                    });
+                    /*
                     tmpTable[0].push(0);
                     tmpTable[1].push(table[i][e1]);
                     tmpTable[2].push(table[i][e2]);
                     tmpTable[3].push(0);
+                    */
                     z = z + 1;
                 }
             }
@@ -86,7 +96,7 @@ function planen(table){
                 }
             }
         }
-        tmpT.push(tmpTable);
+        tmpT[ii] = {'liste': tmpObject};
     }
     return tmpT;
 }

@@ -7,6 +7,7 @@ body {
 .ng-cloak{
     display: none;
 }
+
 #remGroupAlert{
     position: absolute;
     top: 0;
@@ -46,10 +47,6 @@ body {
     text-align: center;
     position: absolute;
     bottom: 0px;
-}
-
-#dummyRound,#dummyTable {
-    display: none;
 }
 
 #sec2 table {

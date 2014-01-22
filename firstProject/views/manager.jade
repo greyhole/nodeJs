@@ -44,16 +44,23 @@ block content
         h2.panel-title Spielpläne
       div#collapseTwo.panel-collapse.collapse
         div.panel-body
-          div#sec2.row
+          div#sec2.row(ng-controller='listctrl')
+            table.table.table-striped.table-condensed.table-striped(ng-repeat='(key,value) in playlist'){{key}} 
+              tr(ng-repeat ='team in value.liste')
+                td.point_select_td
+                  div.point_select_div
+                    span.point_select_span.btn.btn-default {{team.punkte1}}
+                    select.form-control.selector(ng-model='team.punkte1',ng-options='sel for sel in selects') 
+                td {{team.name1}}
+                td :
+                td {{team.name2}}
+                td.point_select_td
+                  div.point_select_div
+                    span.point_select_span.btn.btn-default {{team.punkte2}}
+                    select.form-control.selector(ng-model='team.punkte2',ng-options='sel for sel in selects') 
+          
 
-  div(data-ng-controller='listcntrl')
-    table(data-ng-repeat='(key,value) in play')
-      tr(data-ng-repeat ='pla in value')
-        td
-          span {{pla.punkte}}
-        td
-          select(ng-model='pla.punkte',ng-options='sel for sel in selects')
-
+  
   div#remGroupAlert(ng-controller='groupctrl', ng-show='db.showAlert')
     div.alert.alert-danger.fade.in
       h4 Warnung!
@@ -70,7 +77,7 @@ block content
   
   
     
-  table.table.table-striped.table-condensed.table-striped#dummyTable
+  table#dummyTable
     tr
       td.point_select_td
         div.point_select_div
