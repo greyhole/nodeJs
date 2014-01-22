@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var path = require('path');
-var groupArray = [[]];
+var group = {};
 var playlist = [[[[]]]];
 
 app.set('views', path.join(__dirname, 'views'));
@@ -32,10 +32,14 @@ io.sockets.on('connection', function(socket){
     io.sockets.emit('this',{will: 'be reci'});
 
     socket.on('beginCalc',function(dataD,dataU){
-         groupArray =  dataD.data;
+         group =  dataD.data;
 
         var erg = planen(groupArray);
         dataU(erg);
+    });
+    socket.on('testdata',function(dataD,dataU){
+        dataU(dataD.data);
+        console.log(dataD.data);
     });
     
     socket.on('saveData',function(dataD,dataU){

@@ -4,7 +4,9 @@ body {
   padding-right: 10px;
   font-size: 18px ;
 }
-
+.ng-cloak{
+    display: none;
+}
 #remGroupAlert{
     position: absolute;
     top: 0;

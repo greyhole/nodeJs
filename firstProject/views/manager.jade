@@ -4,16 +4,16 @@ block content
     div.navbar-header
       a.navbar-brand Kickerturnier
     div.collapse.navbar-collapse
-      ul.nav.navbar-nav
+      ul.nav.navbar-nav(ng-controller='groupctrl')
         li
-          a(href='javascript:void(0)' onclick='send_playData();return false;') SaveData
-        li.dropdown(ng-controller='groupctrl')
+          a(href='javascript:void(0)', ng-click='sendGroup()') SaveData
+        li.dropdown
           a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde +
           ul.dropdown-menu
             li(ng-repeat='(key,value) in db.group')
               a(href='javascript:void(0)' ng-click='value.runde = value.runde + 1') {{key}} Runde: {{value.runde}}
 
-        li.dropdown(ng-controller='groupctrl')
+        li.dropdown
           a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde -
           ul.dropdown-menu
             li(ng-repeat='(key,value) in db.group')

@@ -1,4 +1,3 @@
-
 function send_playData(){
     socket.emit('saveData',{data: playlist},function(data){
         console.log('gesendet');
@@ -89,7 +88,7 @@ var model = angular.module('kickApp.model', [])
     })
 
     .factory('ws',function($rootScope){
-        var socket = io.connect();
+        var socket = io.connect(':3000');
         return {
             on: function(eventName, callback){
                 socket.on(eventName,function(){
@@ -101,10 +100,6 @@ var model = angular.module('kickApp.model', [])
             },
 
             emit: function(eventName, data, callback){
-                if (typeof data == 'function') {
-                    callback = data;
-                    data={};
-                };
                 socket.emit(eventName,data,function(){
                     var args = arguments;
                     $rootScope.$apply(function(){
@@ -116,13 +111,14 @@ var model = angular.module('kickApp.model', [])
             }
         };
     })
+    
 ;
 
 /* alles an logik liegt in controller und directives
 *
 */
 var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
-    .controller('groupctrl',function($scope,Db){
+    .controller('groupctrl',function($scope,Db,ws){
         $scope.db = Db;
 
         $scope.addGroupBtn_pressed = function(){
@@ -130,6 +126,12 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
                                                                                             {'teams':[{'name':''}],
                                                                                              'runde':0,
                                                                                             };
+        };
+
+        $scope.sendGroup = function(){
+            ws.emit('testdata',{'data': $scope.db.group},function(data){
+                console.log(data);
+            });
         };
 
         $scope.remGroupBtn_pressed = function(){
@@ -160,12 +162,8 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
         ]};
     })
     .controller('socketctrl',function($scope,ws,Db){
-        $scope.connected = false;
         $scope.db = Db;
 
-        $scope.sendGroup = function(){
-            ws.emit()
-        };
     })
 ;
 
