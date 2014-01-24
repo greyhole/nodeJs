@@ -1,2 +1,25 @@
 extends view_layout
 block content
+    h1 Fuck PandaPandaPanda...
+    table.table.table-striped.table-condensed.table-striped
+        tr
+            td Platz
+            td Name
+            td Spiele
+            td Punkte
+            td Tore+
+            td Tore-
+
+        tr(ng-repeat='item in display_score.teams')
+          td {{$index+1}}
+          td {{item.name}}
+          td {{item.spiele}}
+          td {{item.punkte}}
+          td {{item.toreP}}
+          td {{item.toreM}}
+
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/view_style.css')
+    script(src="/javascripts/angular.min.js")
+    script(src="/socket.io/socket.io.js")
+    script(src="/javascripts/viewer.js")

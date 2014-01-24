@@ -1,9 +1,6 @@
 doctype html
-html
+html(ng-app="viewApp")
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
-    link(rel='stylesheet', href='/stylesheets/view_style.css')
-
-  body
+  body( ng-controller='viewctrl')
     block content

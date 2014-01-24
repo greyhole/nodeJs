@@ -1,8 +1,8 @@
 var express = require('express');
 var app = express();
 var path = require('path');
-var group = {};
-var playlist = [[[[]]]];
+var group = [];
+var playlist = [];
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -29,74 +29,93 @@ app.get('/manager',function(req,res){res.render('manager',{title: 'Manager'})});
 app.get('/view',function(req,res){res.render('view',{title: 'Ansicht'})});
 
 io.sockets.on('connection', function(socket){
-    io.sockets.emit('this',{will: 'be reci'});
+    //io.sockets.emit('connection',socket:' + socket.id + 'ist verbunden.');
 
     socket.on('calculate_playlist',function(dataD,dataU){
-        var erg = planen(dataD.data);
-        console.log(erg);
+        group = dataD;
+        var erg = planen(dataD);
         dataU(erg);
     });
     
-    socket.on('saveData',function(dataD,dataU){
-        playlist = dataD.data;
-        console.log(playlist);
+    socket.on('calculate_score',function(dataD){
+       playlist = dataD;
+       score();
+       io.sockets.emit('getScore',group);
     });
 });
 
 function planen(table){
     
-    var tmpT = {};
+    var tmpT = [];
 
     for (var ii in table){
         var tl = table[ii].teams.length;
-        console.log('tl: ',tl);
-        var tmpObject=[];
+        var tmpArray=[];
         if ( (tl % 2) == 0){
-            var z = 0;
             for (var j = 0; j < (tl-1); j++){
-                tmpObject.push({
+                tmpArray.push({
                     'name1': table[ii].teams[(tl-1)].name,
                     'name2': table[ii].teams[j].name,
                     'punkte1': 0,
                     'punkte2': 0
                 });
-                /*tmpTable[0].push(0);
-                tmpTable[1].push(table[i][(tl-1)]);
-                tmpTable[2].push(table[i][j]);
-                tmpTable[3].push(0);*/
-                z = z + 1;
                 for (var k = 1; k < (tl / 2); k++) {
                     var e1 = (j + k) % (tl - 1);
                     var e2 = (j - k + tl - 1) % (tl - 1);
-                    tmpObject.push({
+                    tmpArray.push({
                         'name1': table[ii].teams[e1].name,
                         'name2': table[ii].teams[e2].name,
                         'punkte1': 0,
                         'punkte2': 0
                     });
-                    /*
-                    tmpTable[0].push(0);
-                    tmpTable[1].push(table[i][e1]);
-                    tmpTable[2].push(table[i][e2]);
-                    tmpTable[3].push(0);
-                    */
-                    z = z + 1;
                 }
             }
         }
         else{
-            var z = 0;
             for (var j = 1;j <= tl; j++){
                 for(var k = 1; k < (tl / 2); k++){
-                    tmpTable[0].push(0);
-                    tmpTable[3].push(0);
-                    tmpTable[1].push(table[i][((j + k) % tl)]);
-                    tmpTable[2].push(table[i][((j - k + tl) % tl)]);
-                    z = z + 1;
+                    tmpArray.push({
+                        'name1': table[ii].teams[((j + k) % tl)].name,
+                        'name2': table[ii].teams[((j - k + tl) % tl)].name,
+                        'punkte1': 0,
+                        'punkte2': 0
+                    });
                 }
             }
         }
-        tmpT[ii] = {'liste': tmpObject};
+        tmpT[ii] = {'liste':tmpArray,'gruppe': table[ii].gruppe};
     }
     return tmpT;
+}
+function score(){
+    for (ii in group){
+        for (jj in playlist){
+            if (group[ii].gruppe == playlist[jj].gruppe){
+                console.log('gewählte gruppe:',group[ii]);
+
+                console.log('gewählte playlist:',playlist[jj]);
+                for (team in group[ii].teams){
+                    for (match in playlist[jj].liste){
+                        if(group[ii].teams[team].name == playlist[jj].liste[match].name1){
+                            if ((playlist[jj].liste[match].punkte1 > 0)||(playlist[jj].liste[match].punkte2 > 0) ){
+                                group[ii].teams[team].spiele = group[ii].teams[team].spiele + 1;
+                            }
+                            group[ii].teams[team].toreP = group[ii].teams[team].toreP + playlist[jj].liste[match].punkte1;
+                            group[ii].teams[team].toreM = group[ii].teams[team].toreM + playlist[jj].liste[match].punkte2;
+                            group[ii].teams[team].punkte = group[ii].teams[team].punkte + ((playlist[jj].liste[match].punkte1 ==10) ? 3 : 0);                            
+                        }
+
+                        else if(group[ii].teams[team].name == playlist[jj].liste[match].name2){
+                            if ((playlist[jj].liste[match].punkte1 > 0)||(playlist[jj].liste[match].punkte2 > 0) ){
+                                group[ii].teams[team].spiele = group[ii].teams[team].spiele + 1;
+                            }
+                            group[ii].teams[team].toreP = group[ii].teams[team].toreP + playlist[jj].liste[match].punkte2;
+                            group[ii].teams[team].toreM = group[ii].teams[team].toreM + playlist[jj].liste[match].punkte1;
+                            group[ii].teams[team].punkte = group[ii].teams[team].punkte + ((playlist[jj].liste[match].punkte2 ==10) ? 3 : 0);                            
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1,74 +1,3 @@
-function send_playData(){
-    socket.emit('saveData',{data: playlist},function(data){
-        console.log('gesendet');
-    });
-}
-
-jQuery.extend(jQuery.expr[':'],{
-    notempty: function(tmp){
-        return (tmp.value.length > 0);
-    }
-});
-
-function createPlaylistBtn_pressed(){                 //createPlaylistBtn event handler function
-    var tmp = [];
-    $('.roundCtrl li:not(:first-child)').remove();
-    
-    if (!$.isEmptyObject($('#sec1_body div'))){
-        $('#sec1_body div').each(function(index){
-            var groupName = 'Gruppe ' + String.fromCharCode(65+index);
-            group[groupName] = {'teams'  :[],
-                                'runde' :0
-                                };
-
-            $(this).children('input:notempty').each(function(){
-                group[groupName]['teams'].push($(this).val());
-            });
-
-            if ($.isEmptyObject(group[groupName]['teams'])){return true;};
-                        
-            var dummy = $('#dummyRound').children().clone();
-            $(dummy).children('a').text(groupName);
-            $(dummy).appendTo('.roundCtrl');
-            group[groupName]['round'] = 0;
-        });
-        if(!groupObj[groupName]){return false;};
-
-        socket.emit('beginCalc',{data: group},function(dataD){
-            playlist = dataD;
-
-            $('#sec2').empty();
-            $(dataD).each(function(index,element){
-                $("<div></div>")
-                    .addClass('col-xs-6')
-                    .addClass('col-md-4')
-                    .addClass('sec_div')
-                    .attr('id',index)
-                    .text('Gruppe ' + String.fromCharCode(65+index))
-                    .append(buildPlayTable(element))
-                    .appendTo('#sec2');
-            });
-        });
-    }
-}
-
-
-
-function buildPlayTable(enemys){
-    var table = $('#dummyTable').clone().removeAttr('id').show();
-    var row = $(table).children();
-    $(table).empty();
-
-    $(enemys[1]).each(function(index,element){
-        $(row).find('td.leftEnemy').text(element);
-        $(row).find('td.rightEnemy').text(enemys[2][index])
-        $(row).appendTo(table);
-    });
-    return table;        
-}
-
-
-
 /* alle daten liegen im model
 *
 */
@@ -77,12 +6,19 @@ var model = angular.module('kickApp.model', [])
         return {
             selects : [0,1,2,3,4,5,6,7,8,9,10],
 
-            playlist : {},
-            group : {
-                'Gruppe A' : {
-                    'teams' : [{'name': ''}],
-                    'runde' : 0,    }
-                },
+            playlist : [],
+            group :[{
+                    'gruppe' : 'Gruppe A',
+                    'teams' : [{
+                                        'name':'',
+                                        'spiele':0,
+                                        'toreM':0,
+                                        'toreP':0,
+                                        'diff':0,
+                                        'punkte':0
+                                        }],
+                    'runde' : 0    
+                }],
             showAlert: false,
         };
     })
@@ -118,15 +54,22 @@ var model = angular.module('kickApp.model', [])
 *
 */
 var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
-    .controller('groupctrl',function($scope,Db,ws){
+    .controller('managerctrl',function($scope,Db,ws){
         $scope.db = Db;
 
         $scope.addGroupBtn_pressed = function(){
-            $scope.db.group['Gruppe ' + String.fromCharCode(65+Object.keys($scope.db.group).length)] =
-                                                                                            {'teams':[{'name':''}],
-                                                                                             'runde':0,
-                                                                                            };
-        };
+            $scope.db.group.push({  'gruppe': 'Gruppe ' + String.fromCharCode(65+$scope.db.group.length),
+                                    'teams':[{
+                                        'name':'',
+                                        'spiele':0,
+                                        'toreM':0,
+                                        'toreP':0,
+                                        'diff':0,
+                                        'punkte':0
+                                        }],
+                                    'runde':0
+                                   });
+            };
 
         $scope.sendGroup = function(){
             var tmpgroup = angular.copy(Db.group);
@@ -135,45 +78,47 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
                     tmpgroup[ii].teams.pop();
                 } 
                 else{
-                  delete tmpgroup[ii]; 
+                   tmpgroup.splice(ii,1); 
                 }
             };
             
-            if (Object.keys(tmpgroup).length != 0){
-                ws.emit('calculate_playlist',{'data': tmpgroup},function(data){
+            if (tmpgroup.length != 0){
+                ws.emit('calculate_playlist',tmpgroup,function(data){
                   $scope.db.playlist = data;
-                console.log(Db.playlist);
                 });
             }
         };
-
-        $scope.remGroupBtn_pressed = function(){
-            console.log('pressed');
-            $scope.db.showAlert = true;
+        $scope.sendData = function(){
+            ws.emit('calculate_score',$scope.db.playlist);
         };
 
-        $scope.onchange = function(key,index){
-            if (index==($scope.db.group[key].teams.length-1)){
-                $scope.db.group[key].teams.push({'name':''});   
+        ws.on('getScore',function(dataD){
+            console.log(dataD);
+        });
+        
+        $scope.remGroupAlert_OKBtn_pressed = function(){
+            $scope.db.group.pop();
+            $scope.db.showAlert = false;
+        };
+
+        $scope.onchange = function(parent_index,index){
+            if (index==($scope.db.group[parent_index].teams.length-1)){
+                $scope.db.group[parent_index].teams.push({
+                                        'name':'',
+                                        'spiele':0,
+                                        'toreM':0,
+                                        'toreP':0,
+                                        'diff':0,
+                                        'punkte':0
+                                        });   
             }
         };
-        $scope.onblur = function(key,index){
-            if (($scope.db.group[key].teams[index].name == "")&&(index!=($scope.db.group[key].teams.length-1))){
-                $scope.db.group[key].teams.splice(index,1);
+
+        $scope.onblur = function(parent_index,index){
+            if (($scope.db.group[parent_index].teams[index].name == "")&&(index!=($scope.db.group[parent_index].teams.length-1))){
+                $scope.db.group[parent_index].teams.splice(index,1);
             }            
         };
-    })
-    .controller('listctrl',function($scope,Db){
-        $scope.selects = Db.selects;
-        $scope.playlist = Db.playlist;
-        $scope.$watch('playlist',function(){
-            $scope.playlist = Db.playlist;   
-        });
-
-    })
-    .controller('socketctrl',function($scope,ws,Db){
-        $scope.db = Db;
-
     })
 ;
 
