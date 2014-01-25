@@ -63,7 +63,7 @@ function sendData(){
     io.sockets.emit('bucket',db);
 }
 
-function create_directGroup(table){
+/*function create_directGroup(table){
     if (table[0].teams.length < table[1].teams.length){
         table[1].teams.pop();
     }
@@ -82,6 +82,7 @@ function create_directGroup(table){
     }
     return [{'gruppe':''}]
 }
+*/
 function create_playlist(table){
     db.runden = {};
     var tmpT = [];

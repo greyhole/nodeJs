@@ -48,22 +48,22 @@ var ctrl = angular.module('viewApp.ctrl', ['viewApp.model'])
         $scope.score_index = 0;
         $scope.display_score = $scope.db.score[0];
         $scope.display_playlist = $scope.db.playlist[0];
-
+        $scope.hide = false;
         ws.on('bucket',function(dataD){
             $scope.db.score = dataD.score;
             $scope.db.playlist = dataD.playlist;          
             $scope.db.runden = dataD.runden;
-            console.log('loadedList:',$scope.db.playlist);
         });
         $scope.onTimeout = function(){
-            console.log('aktualisiert',$scope.db.score.length);
+            console.log('aaaaa');
+            $scope.hide = true;
+            fadeTimeout= $timeout(function(){
+                $scope.score_index = ($scope.score_index < $scope.db.score.length-1) ? ($scope.score_index + 1) : 0;
+                $scope.display_score = $scope.db.score[$scope.score_index];
+                $scope.display_playlist = $scope.db.playlist[$scope.score_index];
+                $scope.hide = false;
 
-            $scope.score_index = ($scope.score_index < $scope.db.score.length-1) ? ($scope.score_index + 1) : 0;
-            $scope.display_score = $scope.db.score[$scope.score_index];
-            $scope.display_playlist = $scope.db.playlist[$scope.score_index];
-            console.log($scope.display_playlist);
-            console.log($scope.score_index);
-            console.log($scope.display_score);
+            }, 600);            
             myTimeout= $timeout($scope.onTimeout, 10000);
         };
         var myTimeout= $timeout($scope.onTimeout, 10000);
