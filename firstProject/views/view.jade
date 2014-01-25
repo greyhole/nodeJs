@@ -1,6 +1,6 @@
 extends view_layout
 block content
-    table.table.table-striped.table-condensed.table-bordered
+    table.table.table-striped.table-condensed.table-bordered.fade(ng-class='{fade2: hide}')
       thead#header1
         tr
           th 
@@ -16,8 +16,8 @@ block content
           td#vs :
           td {{match.name2}}
 
-    h1 {{display_score.gruppe}}
-    table.table.table-striped.table-condensed.table-bordered
+    h1.fade(ng-class='{fade2: hide}') {{display_score.gruppe}}
+    table.table.table-striped.table-condensed.table-bordered.fade(ng-class='{fade2: hide}')
         thead
           tr
             th Platz

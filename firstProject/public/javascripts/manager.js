@@ -54,7 +54,7 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
                                    });
             };
 
-        $scope.sendGroup = function(){
+        $scope.sendGroup = function(direct){
             var tmpgroup = angular.copy(Db.group);
             for (var ii in tmpgroup) {
                 if (tmpgroup[ii].teams.length > 3){
@@ -66,7 +66,7 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
             };
             
             if (tmpgroup.length != 0){
-                ws.emit('transmit_group',{'group':tmpgroup});
+                ws.emit('transmit_group',{'group':tmpgroup,'direct':direct});
             }
         };
 
