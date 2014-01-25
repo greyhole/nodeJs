@@ -1,0 +1,23 @@
+body {
+padding: 20px;
+  font-size: 20px ;
+}
+h1{
+	text-align: center;
+}
+.number_td{
+	width: 20px;
+}
+.name_td{
+	width: auto;
+}
+#header1{
+	text-align: center;
+}
+#vs{
+	text-align: center;
+	width: 5px;
+}
+#naming{
+	width: 20px;
+}

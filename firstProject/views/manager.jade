@@ -10,14 +10,14 @@ block content
         li.dropdown
           a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde +
           ul.dropdown-menu
-            li(ng-repeat='item in db.group')
-              a(href='javascript:void(0)' ng-click='item.runde = item.runde + 1') {{item.gruppe}} Runde: {{item.runde}}
+            li(ng-repeat='(key,value) in db.runden')
+              a(href='javascript:void(0)' ng-click='addRunde(key)') {{key}} Runde: {{value}}
 
         li.dropdown
           a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde -
           ul.dropdown-menu
-            li(ng-repeat='item in db.group')
-              a(href='javascript:void(0)' ng-click='item.runde = (item.runde == 0) ? 0 : item.runde-1') {{item.gruppe}} Runde: {{item.runde}}
+            li(ng-repeat='(key,value) in db.runden')
+              a(href='javascript:void(0)' ng-click='remRunde(key)') {{key}} Runde: {{value}}
 
   div#accordion.panel-group
     div.panel.panel-default
@@ -37,8 +37,11 @@ block content
             div.row
               div.col-xs-6.sec_div.col-md-3(ng-repeat='item in db.group') {{item.gruppe}}
                   input.form-control(type='text', placeholder='Teamname', ng-repeat='team in item.teams', ng-model='team.name', ng-blur='onblur($parent.$index,$index)', ng-change='onchange($parent.$index,$index)')
-
-            button#createPlay.btn(type='submit', ng-click='sendGroup()') Spielplan erstellen
+            
+            form.form-inline(role='form')
+              button.btn.btn-default(type='submit', ng-click='sendGroup(false)') Spielplan erstellen
+              button.btn.btn-default(type='submit',ng-click='sendGroup(true)') Direktes Spiel
+              
     div.panel.panel-default
       div.panel-heading(data-toggle="collapse", data-parent="#accordion",data-target='#collapseTwo')
         h2.panel-title Spielpläne

@@ -4,22 +4,13 @@
 var model = angular.module('kickApp.model', [])
     .factory('Db', function() {
         return {
-            selects : [0,1,2,3,4,5,6,7,8,9,10],
-
-            playlist : [],
-            group :[{
-                    'gruppe' : 'Gruppe A',
-                    'teams' : [{
-                                        'name':'',
-                                        'spiele':0,
-                                        'toreM':0,
-                                        'toreP':0,
-                                        'diff':0,
-                                        'punkte':0
-                                        }],
-                    'runde' : 0    
+            'selects' : [0,1,2,3,4,5,6,7,8,9,10],
+            'playlist' : [],
+            'group' :[{'gruppe' : 'Gruppe A',
+                    'teams' : [{'name':''}]
                 }],
-            showAlert: false,
+            'runden':{},
+            'showAlert': false
         };
     })
 
@@ -59,15 +50,7 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
 
         $scope.addGroupBtn_pressed = function(){
             $scope.db.group.push({  'gruppe': 'Gruppe ' + String.fromCharCode(65+$scope.db.group.length),
-                                    'teams':[{
-                                        'name':'',
-                                        'spiele':0,
-                                        'toreM':0,
-                                        'toreP':0,
-                                        'diff':0,
-                                        'punkte':0
-                                        }],
-                                    'runde':0
+                                    'teams':[{'name':''}],
                                    });
             };
 
@@ -83,17 +66,19 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
             };
             
             if (tmpgroup.length != 0){
-                ws.emit('calculate_playlist',tmpgroup,function(data){
-                  $scope.db.playlist = data;
-                });
+                ws.emit('transmit_group',{'group':tmpgroup});
             }
         };
+
         $scope.sendData = function(){
-            ws.emit('calculate_score',$scope.db.playlist);
+            ws.emit('transmit_playlist',{'playlist':$scope.db.playlist});
         };
 
-        ws.on('getScore',function(dataD){
+        ws.on('bucket',function(dataD){
             console.log(dataD);
+            $scope.db.playlist = dataD.playlist;
+            $scope.db.group = dataD.group;
+            $scope.db.runden = dataD.runden;
         });
         
         $scope.remGroupAlert_OKBtn_pressed = function(){
@@ -103,17 +88,19 @@ var ctrl = angular.module('kickApp.ctrl', ['kickApp.model'])
 
         $scope.onchange = function(parent_index,index){
             if (index==($scope.db.group[parent_index].teams.length-1)){
-                $scope.db.group[parent_index].teams.push({
-                                        'name':'',
-                                        'spiele':0,
-                                        'toreM':0,
-                                        'toreP':0,
-                                        'diff':0,
-                                        'punkte':0
-                                        });   
+                $scope.db.group[parent_index].teams.push({'name':''});   
             }
         };
+        $scope.addRunde = function(key){
+            $scope.db.runden[key] = $scope.db.runden[key] + 1;
+            ws.emit('transmit_runden',{'runden':$scope.db.runden});
+        };
 
+        $scope.remRunde = function(key){
+            $scope.db.runden[key] = ($scope.db.runden[key] > 1) ? $scope.db.runden[key] - 1 : 1;
+            ws.emit('transmit_runden',{'runden':$scope.db.runden});
+
+        };
         $scope.onblur = function(parent_index,index){
             if (($scope.db.group[parent_index].teams[index].name == "")&&(index!=($scope.db.group[parent_index].teams.length-1))){
                 $scope.db.group[parent_index].teams.splice(index,1);

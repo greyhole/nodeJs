@@ -4,8 +4,11 @@
 var model = angular.module('viewApp.model', [])
     .factory('Db', function() {
         return {
-            playlist : [],
-            group :[{'gruppe':'','teams':[{'name':'test','punkte':0,'toreP':0,'toreM':6,'spiele':0}],'runde':0}]
+            'naming':['aktuell','Nächste','Nächste++'],
+            'order': ['punkte','diff'],
+            'playlist' : [],
+            'score' :[{'gruppe':'','teams':[{'name':'test','punkte':0,'toreP':0,'toreM':6,'spiele':0}]}],
+            'runden':{}
         };
     })
 
@@ -43,20 +46,27 @@ var ctrl = angular.module('viewApp.ctrl', ['viewApp.model'])
     .controller('viewctrl',function($scope,Db,ws,$timeout){
         $scope.db = Db;        
         $scope.score_index = 0;
-        $scope.display_score = $scope.db.group[0];
-        ws.on('getScore',function(data){
-            $scope.db.group = data;
+        $scope.display_score = $scope.db.score[0];
+        $scope.display_playlist = $scope.db.playlist[0];
+
+        ws.on('bucket',function(dataD){
+            $scope.db.score = dataD.score;
+            $scope.db.playlist = dataD.playlist;          
+            $scope.db.runden = dataD.runden;
+            console.log('loadedList:',$scope.db.playlist);
         });
-
         $scope.onTimeout = function(){
-            console.log('aktualisiert',$scope.db.group.length);
+            console.log('aktualisiert',$scope.db.score.length);
 
-            $scope.score_index =  (($scope.score_index < ($scope.db.group.length-1)) ? ($scope.score_index++) : 0);
-            $scope.display_score = $scope.db.group[$scope.score_index];
+            $scope.score_index = ($scope.score_index < $scope.db.score.length-1) ? ($scope.score_index + 1) : 0;
+            $scope.display_score = $scope.db.score[$scope.score_index];
+            $scope.display_playlist = $scope.db.playlist[$scope.score_index];
+            console.log($scope.display_playlist);
+            console.log($scope.score_index);
             console.log($scope.display_score);
-            myTimeout= $timeout($scope.onTimeout, 3000);
+            myTimeout= $timeout($scope.onTimeout, 10000);
         };
-        var myTimeout= $timeout($scope.onTimeout, 3000);
+        var myTimeout= $timeout($scope.onTimeout, 10000);
     })
 ;
 

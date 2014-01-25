@@ -1,22 +1,41 @@
 extends view_layout
 block content
-    h1 Fuck PandaPandaPanda...
-    table.table.table-striped.table-condensed.table-striped
+    table.table.table-striped.table-condensed.table-bordered
+      thead#header1
         tr
-            td Platz
-            td Name
-            td Spiele
-            td Punkte
-            td Tore+
-            td Tore-
+          th 
+          th Runde
+          th Team 1
+          th vs
+          th Team 2
+      tbody
+        tr(ng-repeat="match in display_playlist.liste | limitTo: db.runden[display_playlist.gruppe]-1 - display_playlist.liste.length | limitTo: 3")
+          td#naming {{db.naming[$index]}}
+          td.number_td {{db.runden[display_playlist.gruppe] + $index}}
+          td {{match.name1}}
+          td#vs :
+          td {{match.name2}}
 
-        tr(ng-repeat='item in display_score.teams')
-          td {{$index+1}}
-          td {{item.name}}
-          td {{item.spiele}}
-          td {{item.punkte}}
-          td {{item.toreP}}
-          td {{item.toreM}}
+    h1 {{display_score.gruppe}}
+    table.table.table-striped.table-condensed.table-bordered
+        thead
+          tr
+            th Platz
+            th Name
+            th Spiele
+            th Punkte
+            th Differenz
+            th Tore+
+            th Tore-
+        tbody
+          tr(ng-repeat="item in display_score.teams | orderBy:db.order:true")
+            td.number_td {{$index+1}}
+            td {{item.name}}
+            td.number_td {{item.spiele}}
+            td.number_td {{item.punkte}}
+            td.number_td {{item.diff}}
+            td.number_td {{item.toreP}}
+            td.number_td {{item.toreM}}
 
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/view_style.css')
