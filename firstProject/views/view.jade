@@ -1,13 +1,13 @@
 extends view_layout
 block content
-    table.table.table-striped.table-condensed.table-bordered.fade(ng-class='{fade2: hide}')
-      thead#header1
+    table.centree.table.table-striped.table-condensed.table-bordered.fade(ng-class='{fade2: hide}')
+      thead
         tr
           th 
-          th Runde
-          th Team 1
+          th.centree Runde
+          th.centree Team 1
           th vs
-          th Team 2
+          th.centree Team 2
       tbody
         tr(ng-repeat="match in display_playlist.liste | limitTo: db.runden[display_playlist.gruppe]-1 - display_playlist.liste.length | limitTo: 3")
           td#naming {{db.naming[$index]}}
