@@ -4,7 +4,7 @@
 var model = angular.module('viewApp.model', [])
     .factory('Db', function() {
         return {
-            'naming':['aktuell','Nächste','Nächste++'],
+            'naming':['aktuell','Nächste','...'],
             'order': ['punkte','diff'],
             'playlist' : [],
             'score' :[{'gruppe':'','teams':[{'name':'test','punkte':0,'toreP':0,'toreM':6,'spiele':0}]}],

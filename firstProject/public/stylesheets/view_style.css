@@ -1,6 +1,6 @@
 body {
 padding: 20px;
-font-size: 20px ;
+font-size: 18px ;
 background-image: url(fooseball_close_radial.jpg); 
 background-size: cover;
 color: rgb(255,200,0); 
@@ -17,7 +17,7 @@ h1{
 .name_td{
 	width: auto;
 }
-#header1{
+.centree{
 	text-align: center;
 }
 #vs{
@@ -38,5 +38,5 @@ h1{
 }
 .table-striped > tbody > tr:nth-child(odd) > td,
 .table-striped > tbody > tr:nth-child(odd) > th {
-  background-color: rgba(255,255,255,0.3);
+  background-color: rgba(255,255,255,0.2);
 }
