@@ -1,0 +1,69 @@
+extends layout
+
+block content
+  nav.navbar.navbar-inverse.navbar-fixed-top.yamm(role='navigation')
+    div.navbar-header
+      a.navbar-brand Kickerturnier
+    div.collapse.navbar-collapse
+      ul.nav.navbar-nav
+        li
+          a(href='javascript:void(0)') SaveData
+        li.dropdown.yamm-fw
+          a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde +
+          ul.dropdown-menu
+            li
+                div.yamm-content
+                    div
+                        form(role='form')
+                            label(for="round") Runde:
+                            input#round(type='number') 
+                    form(role="form").sec_div.test
+                        div.form-group
+                            input.form-control(type="email" placeholder="Enter email")
+                    form(role="form").sec_div.test
+                        div.form-group
+                            input.form-control(type="email" placeholder="Enter email")
+                    form(role="form").sec_div.test
+                        div.form-group
+                            input.form-control(type="email" placeholder="Enter email")
+                    form(role="form").sec_div.test
+                        div.form-group
+                            input.form-control(type="email" placeholder="Enter email")
+                    form(role="form").sec_div.test
+                        div.form-group
+                            input.form-control(type="email" placeholder="Enter email")
+                    form(role="form").sec_div.test
+                        div.form-group
+                            input.form-control(type="email" placeholder="Enter email")
+                    form(role="form").sec_div.test
+                        div.form-group
+                            input.form-control(type="email" placeholder="Enter email")
+                    form(role="form").sec_div.test
+                        div.form-group
+                            input.form-control(type="email" placeholder="Enter email")
+                    form(role="form").sec_div.test
+                        div.form-group
+                            input.form-control(type="email" placeholder="Enter email")
+                    form(role="form").sec_div.test
+                        div.form-group
+                            input.form-control(type="email" placeholder="Enter email")
+                    form(role="form").sec_div.test
+                        div.form-group
+                            input.form-control(type="email" placeholder="Enter email")
+                    form(role="form").sec_div.test
+                        div.form-group
+                            input.form-control(type="email" placeholder="Enter email")
+
+        li.dropdown.yamm-fw
+          a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde -
+          ul.dropdown-menu
+            li
+              a(href='javascript:void(0)') Runde:
+
+  script(src="/javascripts/jquery.min.js")
+  script(src="/socket.io/socket.io.js")
+  script(src="/javascripts/dropdown.js")
+  script(src="/javascripts/collapse.js")
+  script(src="/javascripts/carousel.js")
+  script(src="/javascripts/main.js")
+  
