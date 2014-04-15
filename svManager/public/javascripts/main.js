@@ -4,8 +4,9 @@
 var model = angular.module('svManager.model', [])
     .factory('Db', function() {
         return {
-                'pageSelection' : 'default',
-                'groupCount'    : 1,   
+                'pageSelection' : 'default',   
+                'lineName'      : {},
+                'lineContent'   : [] 
                 };
     })
 
@@ -42,6 +43,17 @@ var model = angular.module('svManager.model', [])
 var ctrl = angular.module('svManager.ctrl', ['svManager.model'])
     .controller('managerctrl',function($scope,Db,wSocket){
         $scope.db = Db;
+        
+        $scope.remLine = function(){
+            if (Object.keys($scope.db.lineName).length > 0){
+              delete $scope.db.lineName[Object.keys($scope.db.lineName).length];
+            }
+        };
+    
+        $scope.addLine = function(){
+            $scope.db.lineName[Object.keys($scope.db.lineName).length+1] = '';
+        };
+
     })
 ;
 

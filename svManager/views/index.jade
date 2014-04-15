@@ -40,19 +40,25 @@ block content
   div.container(ng-switch on='db.pageSelection')
     div.container(ng-switch-default)
       
+
+      
     div.container(ng-switch-when='settings')
       form.form-inline(role='form')
         label.form-group.control-label(for='#formGroup1') Gruppenanzahl: {{db.groupCount}}
         div#formGroup1.btn-group.form-group
-          button.btn.btn-default.btn-xs(type='submit' ng-click="db.groupCount=db.groupCount+1")
+          button.btn.btn-default.btn-xs(type='submit' ng-click="addLine()")
             span.glyphicon.glyphicon-plus
-          button.btn.btn-default.btn-xs(type='submit' ng-click="db.groupCount=(db.groupCount>1)?(db.groupCount-1):1")
+          button.btn.btn-default.btn-xs(type='submit' ng-click="remLine()")
             span.glyphicon.glyphicon-minus
-      div Gruppentitel:
-        form.form-inline(role='form')
-          div.form-group(ng-repeat='item in db.')
-            label.control-label(for='#formGroup2')
-          
+
+      div#groupTitel Gruppentitel:
+       form.form-inline(role='form')
+          div.form-group(ng-repeat='item in db.lineName')
+            label.control-label(for='#formGroup2') {{$index+1}}
+            input.form-control#formGroup2(type='text', placeholder="Bahntitel", ng-model="db.lineName[$index+1]")
+      button.btn.btn-default(type="submit") Speichern
+
+
   script(src="/javascripts/jquery.min.js")
   script(src="/socket.io/socket.io.js")
   script(src="/javascripts/dropdown.js")
