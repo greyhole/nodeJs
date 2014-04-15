@@ -1,65 +1,58 @@
 extends layout
 
 block content
-  nav.navbar.navbar-inverse.navbar-fixed-top.yamm(role='navigation')
-    div.navbar-header
-      a.navbar-brand Kickerturnier
-    div.collapse.navbar-collapse
-      ul.nav.navbar-nav
-        li
-          a(href='javascript:void(0)') SaveData
-        li.dropdown.yamm-fw
-          a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde +
-          ul.dropdown-menu
-            li
+  header#top.navbar.navbar-inverse.navbar-fixed-top.yamm(role='banner')
+    div.container
+      div.navbar-header
+        button.navbar-toggle(data-target='.navbar-collapse' data-toggle='collapse' type='button')
+          span.sr-only Toggle
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a.navbar-brand(href='javascript:void(0)', ng-click="db.pageSelection='default'") svManager
+      div.collapse.navbar-collapse.in(role='navigation')
+        ul.nav.navbar-nav
+          li
+            a(href='javascript:void(0)') SaveData
+          li.dropdown.yamm-fw
+            a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde +
+            ul.dropdown-menu
+              li
                 div.yamm-content
                     div
-                        form(role='form')
-                            label(for="round") Runde:
-                            input#round(type='number') 
+                      form(role='form')
+                          label(for="round") Runde:
+                          input#round(type='number') 
                     form(role="form").sec_div.test
                         div.form-group
                             input.form-control(type="email" placeholder="Enter email")
-                    form(role="form").sec_div.test
-                        div.form-group
-                            input.form-control(type="email" placeholder="Enter email")
-                    form(role="form").sec_div.test
-                        div.form-group
-                            input.form-control(type="email" placeholder="Enter email")
-                    form(role="form").sec_div.test
-                        div.form-group
-                            input.form-control(type="email" placeholder="Enter email")
-                    form(role="form").sec_div.test
-                        div.form-group
-                            input.form-control(type="email" placeholder="Enter email")
-                    form(role="form").sec_div.test
-                        div.form-group
-                            input.form-control(type="email" placeholder="Enter email")
-                    form(role="form").sec_div.test
-                        div.form-group
-                            input.form-control(type="email" placeholder="Enter email")
-                    form(role="form").sec_div.test
-                        div.form-group
-                            input.form-control(type="email" placeholder="Enter email")
-                    form(role="form").sec_div.test
-                        div.form-group
-                            input.form-control(type="email" placeholder="Enter email")
-                    form(role="form").sec_div.test
-                        div.form-group
-                            input.form-control(type="email" placeholder="Enter email")
-                    form(role="form").sec_div.test
-                        div.form-group
-                            input.form-control(type="email" placeholder="Enter email")
-                    form(role="form").sec_div.test
-                        div.form-group
-                            input.form-control(type="email" placeholder="Enter email")
+                    div.test_end
 
-        li.dropdown.yamm-fw
-          a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde -
-          ul.dropdown-menu
-            li
-              a(href='javascript:void(0)') Runde:
-
+          li.dropdown.yamm-fw
+            a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde -
+            ul.dropdown-menu
+              li
+                  a(href='javascript:void(0)') Runde:
+        ul.nav.navbar-nav.navbar-right
+          li
+            a(href='javascript:void(0)', ng-click="db.pageSelection='settings'") Einstellungen
+  
+  div.container(ng-switch on='db.pageSelection')
+    div.container(ng-switch-default)
+      
+    div.container(ng-switch-when='settings')
+      form.form-inline(role='form')
+        label.form-group.control-label(for='#formGroup1') Gruppenanzahl: {{db.groupCount}}
+        div#formGroup1.btn-group.form-group
+          button.btn.btn-default.btn-xs(type='submit' ng-click="db.groupCount=db.groupCount+1")
+            span.glyphicon.glyphicon-plus
+          button.btn.btn-default.btn-xs(type='submit' ng-click="db.groupCount=(db.groupCount>1)?(db.groupCount-1):1")
+            span.glyphicon.glyphicon-minus
+      div Gruppentitel:
+        form.form-inline(role='form')
+          div.form-group(ng-repeat='item in db.')
+            label.control-label(for='#formGroup2')
+          
   script(src="/javascripts/jquery.min.js")
   script(src="/socket.io/socket.io.js")
   script(src="/javascripts/dropdown.js")

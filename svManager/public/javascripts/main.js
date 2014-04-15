@@ -4,7 +4,8 @@
 var model = angular.module('svManager.model', [])
     .factory('Db', function() {
         return {
-        
+                'pageSelection' : 'default',
+                'groupCount'    : 1,   
                 };
     })
 
@@ -41,8 +42,6 @@ var model = angular.module('svManager.model', [])
 var ctrl = angular.module('svManager.ctrl', ['svManager.model'])
     .controller('managerctrl',function($scope,Db,wSocket){
         $scope.db = Db;
-
-        
     })
 ;
 
