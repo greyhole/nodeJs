@@ -15,7 +15,7 @@ block content
           li
             a(href='javascript:void(0)') SaveData
           li.dropdown.yamm-fw
-            a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde +
+            a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Punkte
             ul.dropdown-menu
               li
                 div.yamm-content
@@ -25,7 +25,7 @@ block content
                           input#round(type='number') 
                     form(role="form").sec_div.test
                         div.form-group
-                            input.form-control(type="email" placeholder="Enter email")
+                            input.form-control(type="text" placeholder="Enter email")
                     div.test_end
 
           li.dropdown.yamm-fw
@@ -37,26 +37,27 @@ block content
           li
             a(href='javascript:void(0)', ng-click="db.pageSelection='settings'") Einstellungen
   
-  div.container(ng-switch on='db.pageSelection')
-    div.container(ng-switch-default)
-      
+  div(ng-switch on='db.pageSelection')
+    div(ng-switch-default)
+    
 
-      
-    div.container(ng-switch-when='settings')
-      form.form-inline(role='form')
-        label.form-group.control-label(for='#formGroup1') Gruppenanzahl: {{db.groupCount}}
-        div#formGroup1.btn-group.form-group
-          button.btn.btn-default.btn-xs(type='submit' ng-click="addLine()")
+    div(ng-switch-when='settings')
+      h2 Bahn:
+      form
+        label.control-label(for='#formGroup1') Bahn-hinzufügen/entfernen:
+        div#formGroup1.btn-group
+          button.btn.btn-default(type='submit' ng-click="addLine()")
             span.glyphicon.glyphicon-plus
-          button.btn.btn-default.btn-xs(type='submit' ng-click="remLine()")
+          button.btn.btn-default(type='submit' ng-click="remLine()")
             span.glyphicon.glyphicon-minus
 
-      div#groupTitel Gruppentitel:
-       form.form-inline(role='form')
-          div.form-group(ng-repeat='item in db.lineName')
-            label.control-label(for='#formGroup2') {{$index+1}}
+      div
+        h3 Gruppentitel:
+        div.col-xs-12.col-md-4.formdiv1(ng-repeat='item in db.lineName')
+          form
+            label.control-label(for='#formGroup2') {{$index+1}}. Bahntitel
             input.form-control#formGroup2(type='text', placeholder="Bahntitel", ng-model="db.lineName[$index+1]")
-      button.btn.btn-default(type="submit") Speichern
+      button.btn.btn-default.btn-md(type="submit") Speichern
 
 
   script(src="/javascripts/jquery.min.js")
