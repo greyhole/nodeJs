@@ -1,9 +1,11 @@
-var app = require('express')();
-app.set('views',__dirname);
-app.set('view engine', 'jade');
-var http  = require('http').createServer(app)
-, io    = require('socket.io').listen(http) 
-;
+var express = require('express');
+var	app = express();
+	app.set('views',__dirname);
+	app.set('view engine', 'jade');
+	app.use(express.static(__dirname));
+
+var	http = require('http').createServer(app),
+	io = require('socket.io').listen(http);
 
 http.listen(3000, function(){
   console.log('Express server listening on port 3000');

@@ -1,69 +1,76 @@
-extends layout
+doctype html
+html(ng-app='svManager')
+  head
+    title= title
+    link(rel='stylesheet', href='/lib/bootstrap.min.css')
+    link(rel='stylesheet', href='/lib/yamm.css')
+    link(rel='stylesheet', href='/css/index_style.css')
+    script(src="/lib/angular.min.js")
 
-block content
-  header#top.navbar.navbar-inverse.navbar-fixed-top.yamm(role='banner')
-    div.container
-      div.navbar-header
-        button.navbar-toggle(data-target='.navbar-collapse' data-toggle='collapse' type='button')
-          span.sr-only Toggle
-          span.icon-bar
-          span.icon-bar
-          span.icon-bar
-        a.navbar-brand(href='javascript:void(0)', ng-click="db.pageSelection='default'") svManager
-      div.collapse.navbar-collapse.in(role='navigation')
-        ul.nav.navbar-nav
-          li
-            a(href='javascript:void(0)') SaveData
-          li.dropdown.yamm-fw
-            a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Punkte
-            ul.dropdown-menu
-              li
-                div.yamm-content
-                    div
-                      form(role='form')
-                          label(for="round") Runde:
-                          input#round(type='number') 
-                    form(role="form").sec_div.test
-                        div.form-group
-                            input.form-control(type="text" placeholder="Enter email")
-                    div.test_end
+  body.ng-cloak(ng-controller='managerctrl')
+    header#top.navbar.navbar-inverse.navbar-fixed-top.yamm(role='banner')
+      div.container
+        div.navbar-header
+          button.navbar-toggle(data-target='.navbar-collapse' data-toggle='collapse' type='button')
+            span.sr-only Toggle
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='javascript:void(0)', ng-click="db.pageSelection='default'") svManager
+        div.collapse.navbar-collapse.in(role='navigation')
+          ul.nav.navbar-nav
+            li
+              a(href='javascript:void(0)') SaveData
+            li.dropdown.yamm-fw
+              a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Punkte
+              ul.dropdown-menu
+                li
+                  div.yamm-content
+                      div
+                        form(role='form')
+                            label(for="round") Runde:
+                            input#round(type='number') 
+                      form(role="form").sec_div.test
+                          div.form-group
+                              input.form-control(type="text" placeholder="Enter email")
+                      div.test_end
 
-          li.dropdown.yamm-fw
-            a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde -
-            ul.dropdown-menu
-              li
-                  a(href='javascript:void(0)') Runde:
-        ul.nav.navbar-nav.navbar-right
-          li
-            a(href='javascript:void(0)', ng-click="db.pageSelection='settings'") Einstellungen
-  
-  div(ng-switch on='db.pageSelection')
-    div(ng-switch-default)
+            li.dropdown.yamm-fw
+              a.dropdown-toggle(href='javascript:void(0)' data-toggle='dropdown') Runde -
+              ul.dropdown-menu
+                li
+                    a(href='javascript:void(0)') Runde:
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href='javascript:void(0)', ng-click="db.pageSelection='settings'") Einstellungen
     
+    div(ng-switch on='db.pageSelection')
+      div(ng-switch-default)
+      
 
-    div(ng-switch-when='settings')
-      h2 Bahn:
-      form
-        label.control-label(for='#formGroup1') Bahn-hinzufügen/entfernen:
-        div#formGroup1.btn-group
-          button.btn.btn-default(type='submit' ng-click="addLine()")
-            span.glyphicon.glyphicon-plus
-          button.btn.btn-default(type='submit' ng-click="remLine()")
-            span.glyphicon.glyphicon-minus
+      div(ng-switch-when='settings')
+        h2 Bahn:
+        form
+          label.control-label(for='#formGroup1') Bahn-hinzufügen/entfernen:
+          div#formGroup1.btn-group
+            button.btn.btn-default(type='submit' ng-click="addLine()")
+              span.glyphicon.glyphicon-plus
+            button.btn.btn-default(type='submit' ng-click="remLine()")
+              span.glyphicon.glyphicon-minus
 
-      div
-        h3 Gruppentitel:
-        div.col-xs-12.col-md-4.formdiv1(ng-repeat='item in db.lineName')
-          form
-            label.control-label(for='#formGroup2') {{$index+1}}. Bahntitel
-            input.form-control#formGroup2(type='text', placeholder="Bahntitel", ng-model="db.lineName[$index+1]")
-      button.btn.btn-default.btn-md(type="submit") Speichern
+        div
+          h3 Gruppentitel:
+          div.col-xs-12.col-md-4.formdiv1(ng-repeat='item in db.lineName')
+            form
+              label.control-label(for='#formGroup2') {{$index+1}}. Bahntitel
+              input.form-control#formGroup2(type='text', placeholder="Bahntitel", ng-model="db.lineName[$index+1]")
+        button.btn.btn-default.btn-md(type="submit") Speichern
 
 
-  script(src="/javascripts/jquery.min.js")
+  script(src="/lib/jquery.min.js")
   script(src="/socket.io/socket.io.js")
-  script(src="/javascripts/dropdown.js")
-  script(src="/javascripts/collapse.js")
-  script(src="/javascripts/carousel.js")
-  script(src="/javascripts/main.js")
+  script(src="/lib/dropdown.js")
+  script(src="/lib/collapse.js")
+  script(src="/lib/carousel.js")
+  script(src="/js/main.js")
   
